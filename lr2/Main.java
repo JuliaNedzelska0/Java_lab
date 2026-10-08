@@ -35,8 +35,9 @@ public class Main{
         ticket[i] = new Ticket(ticketNumber, price, place, cityOfDeparture, cityOfArrival);
 
     }
-
     System.out.println ("----Список усіх квитків (до сортування)----");
+
+
     int expensiveCount = 0;
 
     for (Ticket t : ticket) {
@@ -45,8 +46,8 @@ public class Main{
             expensiveCount++;
          }
     }
-
     System.out.println("Кількість квитків дорожчих за 300 грн: " + expensiveCount);
+
     for (int i = 0; i < ticket.length; i++) {
         for (int j = 0; j < ticket.length - 1; j++) {
             if (ticket[j].getPrice() > ticket[j + 1].getPrice()) {
