@@ -1,4 +1,4 @@
-// Порушено правило: ціна квитка має бути більшою за 0
+//правило: ціна квитка має бути більшою за 0
 public class InvalidPriceException extends TicketException {
     private final double invalidPrice;
 

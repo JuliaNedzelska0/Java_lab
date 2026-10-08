@@ -3,7 +3,6 @@ import java.util.Scanner;
 
 public class Main {
 
-    // Читає дані квитка. Помилку валідації логує і прокидає далі (re-throw)
     public static Ticket readTicket(Scanner scanner) throws TicketException {
         System.out.print("----Заповнення інформації про білет----" + "\n");
 
@@ -41,7 +40,7 @@ public class Main {
             System.out.print("Введіть кількість квитків: ");
             int n = scanner.nextInt();
 
-            Ticket[] ticket = new Ticket[n]; // від'ємне n -> NegativeArraySizeException
+            Ticket[] ticket = new Ticket[n];
 
             int i = 0;
             while (i < n) {
@@ -49,15 +48,13 @@ public class Main {
                     ticket[i] = readTicket(scanner);
                     i++;
                 } catch (InvalidPriceException e) {
-                    // специфічний виняток — першим
                     System.out.println("Помилка ціни: " + e.getMessage()
                             + " (введено: " + e.getInvalidPrice() + "). Спробуйте ще раз.");
                 } catch (TicketException e) {
-                    // базовий клас — перехоплює InvalidPlaceException та інші підтипи
                     System.out.println("Помилка квитка: " + e.getMessage() + ". Спробуйте ще раз.");
                 } catch (InputMismatchException e) {
                     System.out.println("Помилка введення: очікувалось число. Спробуйте ще раз.");
-                    scanner.nextLine(); // очищаємо некоректний ввід
+                    scanner.nextLine();
                 }
             }
 
