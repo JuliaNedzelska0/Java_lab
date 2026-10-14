@@ -1,8 +1,3 @@
-/**
- * Абстрактний клас частково реалізує інтерфейс: уся відсоткова знижка
- * рахується однаково, тому формула живе тут, а не дублюється в підкласах.
- * Підклас лише задає відсоток і назву.
- */
 public abstract class AbstractPercentDiscount implements DiscountStrategy {
     protected final double percent;
 

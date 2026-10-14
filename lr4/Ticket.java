@@ -1,4 +1,3 @@
-/** Ticket реалізує два інтерфейси: Comparable (сортування) і Payable (бізнес-поведінка). */
 public class Ticket implements Comparable<Ticket>, Payable {
     private int ticketNumber;
     private double price;

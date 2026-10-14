@@ -5,7 +5,6 @@ public class Main {
     public static void main(String[] args) throws TicketException {
         Ticket ticket = new Ticket(101, 400, 12, "Чернівці", "Київ");
 
-        // Рівень 1: масив типу інтерфейсу, різна поведінка в циклі
         DiscountStrategy[] discounts = {
                 new NoDiscount(),
                 new StudentDiscount(),
@@ -14,17 +13,16 @@ public class Main {
 
         System.out.println("=== Знижки для білета за 400 грн ===");
         for (DiscountStrategy d : discounts) {
-            System.out.println(d.describe(ticket.getPrice())); // default-метод (Рівень 2)
+            System.out.println(d.describe(ticket.getPrice())); 
         }
 
-        // Рівень 2: клас реалізує кілька інтерфейсів
         System.out.println("\n=== Comparable + Payable ===");
         Ticket[] tickets = {
                 ticket,
                 new Ticket(102, 250, 5, "Львів", "Київ"),
                 new Ticket(103, 600, 7, "Одеса", "Київ")
         };
-        Arrays.sort(tickets); // Comparable
+        Arrays.sort(tickets); 
         for (Ticket t : tickets) {
             System.out.println("№" + t.getTicketNumber() + ": " + t.getPrice()
                     + " грн, зі студентською знижкою: " + t.priceWith(new StudentDiscount()) + " грн"); // Payable
