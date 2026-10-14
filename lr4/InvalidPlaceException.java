@@ -1,4 +1,3 @@
-//правило: номер місця має бути додатним
 public class InvalidPlaceException extends TicketException {
     private final int invalidPlace;
 
