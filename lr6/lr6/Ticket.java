@@ -2,12 +2,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Базовий клас ієрархії. Абстрактний, бо «просто квиток» без виду транспорту
- * в домені не існує. Sealed: перелік підкласів закритий.
- */
+// Абстрактний (квиток "взагалі" не існує) і sealed (підкласи закриті переліком)
 public abstract sealed class Ticket implements Comparable<Ticket>, Payable
-        permits TrainTicket, BusTicket, AirTicket {
+        permits TrainTicket, BusTicket {
 
     private final int ticketNumber;
     private final double price;
@@ -31,22 +28,17 @@ public abstract sealed class Ticket implements Comparable<Ticket>, Payable
         this.place = place;
         this.cityOfDeparture = cityOfDeparture;
         this.cityOfArrival = cityOfArrival;
-        System.out.println("  [ctor] Ticket(" + ticketNumber + ")");
+        System.out.println("  [ctor] Ticket");
     }
 
-    // ---- абстрактні методи: кожен вид транспорту реалізує по-своєму ----
-    /** Назва виду транспорту. */
-    public abstract String getTransportType();
-
-    /** Додатковий збір залежить від виду транспорту, тому спільної реалізації немає. */
+    // абстрактний: у кожного виду транспорту свій збір, спільної формули немає
     protected abstract double getServiceFee();
 
-    /** final: формула «ціна + збір» єдина для всіх, підкласи міняють лише збір. */
+    // final: формула "ціна + збір" однакова для всіх, підкласи її не змінюють
     public final double getTotalPrice() {
         return price + getServiceFee();
     }
 
-    // ---- Observer (композиція: квиток ВОЛОДІЄ списком спостерігачів) ----
     public void subscribe(TicketObserver o)   { observers.add(o); }
     public void unsubscribe(TicketObserver o) { observers.remove(o); }
 
@@ -68,20 +60,16 @@ public abstract sealed class Ticket implements Comparable<Ticket>, Payable
 
     @Override
     public String toString() {
-        return "Квиток №" + ticketNumber + " (" + getTransportType() + ")\n" +
-                "Місце: " + place + "\n" +
-                "Маршрут: " + cityOfDeparture + " -> " + cityOfArrival + "\n" +
-                "Ціна: " + price + " грн";
+        return "Квиток №" + ticketNumber + ", місце " + place + ", "
+                + cityOfDeparture + " -> " + cityOfArrival + ", " + price + " грн";
     }
 
     @Override
     public double getPrice() { return price; }
-    public int getTicketNumber() { return ticketNumber; }
-    public int getPlace() { return place; }
-    public String getCityOfDeparture() { return cityOfDeparture; }
-    public String getCityOfArrival() { return cityOfArrival; }
 
-    /** getClass(): квитки різних видів ніколи не рівні, симетрія зберігається. */
+    public int getTicketNumber() { return ticketNumber; }
+
+    // getClass(): квитки різних класів ніколи не рівні (симетрія зберігається)
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

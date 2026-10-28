@@ -7,20 +7,21 @@ public final class BusTicket extends Ticket {
                      String from, String to, int platform) {
         super(ticketNumber, price, place, from, to);
         this.platform = platform;
+        System.out.println("  [ctor] BusTicket");
     }
 
+    // this(...): платформа за замовчуванням
     public BusTicket(int ticketNumber, double price, int place, String from, String to) {
         this(ticketNumber, price, place, from, to, 1);
     }
 
     public int getPlatform() { return platform; }
 
-    @Override public String getTransportType() { return "Автобус"; }
-
-    @Override protected double getServiceFee() { return 5; }
+    @Override
+    protected double getServiceFee() { return 5; }
 
     @Override
-    public String toString() { return super.toString() + "\nПлатформа: " + platform; }
+    public String toString() { return super.toString() + ", автобус, платформа " + platform; }
 
     @Override
     public boolean equals(Object obj) {

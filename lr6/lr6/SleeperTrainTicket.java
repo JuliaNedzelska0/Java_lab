@@ -1,6 +1,5 @@
 import java.util.Objects;
 
-/** Третій рівень: Ticket -> TrainTicket -> SleeperTrainTicket. final: підкласів немає. */
 public final class SleeperTrainTicket extends TrainTicket {
     private final boolean upperBerth;
 
@@ -8,24 +7,20 @@ public final class SleeperTrainTicket extends TrainTicket {
                               String from, String to, int carriage, boolean upperBerth) {
         super(ticketNumber, price, place, from, to, carriage);
         this.upperBerth = upperBerth;
-        System.out.println("  [ctor] SleeperTrainTicket(верхня полиця: " + upperBerth + ")");
+        System.out.println("  [ctor] SleeperTrainTicket");
     }
 
     public boolean isUpperBerth() { return upperBerth; }
 
-    @Override public String getTransportType() { return "Потяг (спальний)"; }
-
-    @Override protected double getServiceFee() { return super.getServiceFee() + 40; } // + білизна
+    @Override
+    protected double getServiceFee() { return super.getServiceFee() + 40; } // білизна
 
     @Override
-    public String toString() {
-        return super.toString() + "\nПолиця: " + (upperBerth ? "верхня" : "нижня");
-    }
+    public String toString() { return super.toString() + ", спальний, " + (upperBerth ? "верхня" : "нижня") + " полиця"; }
 
     @Override
     public boolean equals(Object obj) {
-        if (!super.equals(obj)) return false;
-        return upperBerth == ((SleeperTrainTicket) obj).upperBerth;
+        return super.equals(obj) && upperBerth == ((SleeperTrainTicket) obj).upperBerth;
     }
 
     @Override
