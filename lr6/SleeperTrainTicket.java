@@ -13,7 +13,7 @@ public final class SleeperTrainTicket extends TrainTicket {
     public boolean isUpperBerth() { return upperBerth; }
 
     @Override
-    protected double getServiceFee() { return super.getServiceFee() + 40; } // білизна
+    protected double getServiceFee() { return super.getServiceFee() + 40; } 
 
     @Override
     public String toString() { return super.toString() + ", спальний, " + (upperBerth ? "верхня" : "нижня") + " полиця"; }

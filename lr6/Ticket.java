@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-// Абстрактний (квиток "взагалі" не існує) і sealed (підкласи закриті переліком)
 public abstract sealed class Ticket implements Comparable<Ticket>, Payable
         permits TrainTicket, BusTicket {
 
@@ -31,10 +30,8 @@ public abstract sealed class Ticket implements Comparable<Ticket>, Payable
         System.out.println("  [ctor] Ticket");
     }
 
-    // абстрактний: у кожного виду транспорту свій збір, спільної формули немає
     protected abstract double getServiceFee();
 
-    // final: формула "ціна + збір" однакова для всіх, підкласи її не змінюють
     public final double getTotalPrice() {
         return price + getServiceFee();
     }
@@ -69,7 +66,6 @@ public abstract sealed class Ticket implements Comparable<Ticket>, Payable
 
     public int getTicketNumber() { return ticketNumber; }
 
-    // getClass(): квитки різних класів ніколи не рівні (симетрія зберігається)
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

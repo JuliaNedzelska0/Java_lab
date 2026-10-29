@@ -2,7 +2,6 @@ import java.util.List;
 
 public class Main {
 
-    // sealed + switch: без default, компілятор перевіряє повноту
     static String describe(Ticket t) {
         return switch (t) {
             case SleeperTrainTicket s -> "спальний вагон " + s.getCarriage();

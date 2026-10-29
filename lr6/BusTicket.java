@@ -10,7 +10,6 @@ public final class BusTicket extends Ticket {
         System.out.println("  [ctor] BusTicket");
     }
 
-    // this(...): платформа за замовчуванням
     public BusTicket(int ticketNumber, double price, int place, String from, String to) {
         this(ticketNumber, price, place, from, to, 1);
     }
