@@ -13,7 +13,6 @@ public abstract sealed class Ticket extends BaseEntity implements Comparable<Tic
     private TicketStatus status = TicketStatus.BOOKED;
     private final List<TicketObserver> observers = new ArrayList<>();
 
-    /** id квитка = номер квитка, назва = маршрут. */
     protected Ticket(int ticketNumber, double price, int place,
                      String cityOfDeparture, String cityOfArrival) {
         super(ticketNumber, routeName(cityOfDeparture, cityOfArrival));
