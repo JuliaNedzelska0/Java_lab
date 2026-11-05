@@ -40,7 +40,6 @@ public class InMemoryCrudService<T extends BaseEntity> implements CRUDService<T>
         return sorted(Comparator.comparing(BaseEntity::getName, NameOrder.UKRAINIAN));
     }
 
-    /** Сортує копію, сховище не змінюється. */
     protected List<T> sorted(Comparator<? super T> comparator) {
         List<T> copy = new ArrayList<>(store.values());
         copy.sort(comparator);
