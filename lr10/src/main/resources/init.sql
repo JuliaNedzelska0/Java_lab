@@ -1,7 +1,4 @@
--- Ідемпотентна схема: повторний запуск нічого не ламає і не дублює дані.
 
--- Специфічно для H2: порівняння рядків за українським алфавітом (Є, І, Ї, Ґ), як Collator("uk") в ЛР №7.
--- Без цього ORDER BY name у H2 сортує за кодами Unicode. Для PostgreSQL це COLLATE "uk-UA-x-icu".
 SET COLLATION UKRAINIAN STRENGTH PRIMARY;
 
 CREATE TABLE IF NOT EXISTS passengers (
@@ -28,9 +25,7 @@ CREATE TABLE IF NOT EXISTS tickets (
     CONSTRAINT ck_ticket_price CHECK (price > 0),
     CONSTRAINT ck_ticket_place CHECK (place > 0),
     CONSTRAINT ck_ticket_status CHECK (status IN ('BOOKED', 'PAID', 'CANCELLED')),
-    -- одне й те саме місце на маршруті не можна продати двічі
     CONSTRAINT uq_ticket_seat UNIQUE (name, place),
-    -- пасажира з квитками видалити не можна, спочатку квитки треба скасувати/видалити
     CONSTRAINT fk_ticket_passenger FOREIGN KEY (passenger_id)
         REFERENCES passengers (id) ON DELETE RESTRICT
 );
