@@ -12,25 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Template Method для JDBC-сервісів. Каркас (findById, save, delete, пагінація, пакетна вставка,
- * керування ресурсами) написано один раз. Підкласи надають лише те, що залежить від сутності:
- * назву таблиці, SQL-запити, mapRow і setParameters.
- *
- * Домовленість про порядок параметрів: у insertSql() і updateSql() спочатку йдуть усі стовпці
- * крім id, а id останнім. Тому один метод setParameters(ps, entity) підходить для обох запитів.
- */
 public abstract class AbstractJdbcCrudService<T extends BaseEntity> implements CRUDService<T> {
 
-    /** Функціональний інтерфейс для підстановки параметрів у довільний запит. */
     @FunctionalInterface
     protected interface ParamSetter {
         void set(PreparedStatement ps) throws SQLException;
     }
 
-    // ---- Що надають підкласи (крок шаблону, що змінюється) ----
-
-    /** Константа з коду (не вхідні дані користувача), тому безпечно підставляється в SQL. */
     protected abstract String tableName();
 
     protected abstract String insertSql();
@@ -41,12 +29,10 @@ public abstract class AbstractJdbcCrudService<T extends BaseEntity> implements C
 
     protected abstract void setParameters(PreparedStatement ps, T entity) throws SQLException;
 
-    /** Фрагмент ORDER BY для findAllSortedByName(). Підкласи можуть уточнити. */
     protected String sortedByNameSql() {
         return "SELECT * FROM " + tableName() + " ORDER BY name, id";
     }
 
-    // ---- Каркас (інваріантна частина шаблону) ----
 
     @Override
     public T findById(long id) throws EntityNotFoundException {
@@ -65,7 +51,6 @@ public abstract class AbstractJdbcCrudService<T extends BaseEntity> implements C
         throw new EntityNotFoundException(id);
     }
 
-    /** Додає нову сутність або оновлює наявну за id. Кожен виклик у власній транзакції (autocommit). */
     @Override
     public T save(T entity) {
         Objects.requireNonNull(entity, "Сутність не може бути null");
@@ -76,10 +61,6 @@ public abstract class AbstractJdbcCrudService<T extends BaseEntity> implements C
         }
     }
 
-    /**
-     * Те саме, але на з'єднанні, яке надав викликач. Потрібно, щоб кілька сервісів
-     * брали участь в одній транзакції (див. BookingService).
-     */
     public T save(Connection conn, T entity) throws SQLException {
         Objects.requireNonNull(entity, "Сутність не може бути null");
         try (PreparedStatement update = conn.prepareStatement(updateSql())) {
@@ -95,7 +76,6 @@ public abstract class AbstractJdbcCrudService<T extends BaseEntity> implements C
         return entity;
     }
 
-    /** Лише INSERT (без попереднього UPDATE). Використовується як чесний «по одному» у вимірюванні. */
     public void insert(T entity) {
         try (Connection conn = DBConnection.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(insertSql())) {
@@ -127,10 +107,6 @@ public abstract class AbstractJdbcCrudService<T extends BaseEntity> implements C
         }
     }
 
-    /**
-     * Повертає ВСІ рядки таблиці. Для великої таблиці небезпечно: усе потрапляє в пам'ять JVM
-     * (OutOfMemoryError), довго тримає з'єднання й мережу. Для великих обсягів є findPage.
-     */
     @Override
     public List<T> findAll() {
         return query("SELECT * FROM " + tableName() + " ORDER BY id", ps -> { });
@@ -141,7 +117,6 @@ public abstract class AbstractJdbcCrudService<T extends BaseEntity> implements C
         return query(sortedByNameSql(), ps -> { });
     }
 
-    /** Посторінкове читання. page починається з 0. ORDER BY id обов'язковий: без нього порядок не гарантований. */
     public List<T> findPage(int page, int size) {
         if (page < 0 || size <= 0) {
             throw new IllegalArgumentException("page >= 0 і size > 0, а отримано page=" + page + ", size=" + size);
@@ -164,10 +139,6 @@ public abstract class AbstractJdbcCrudService<T extends BaseEntity> implements C
         }
     }
 
-    /**
-     * Пакетна вставка (addBatch/executeBatch) в одній транзакції: INSERT для кожної сутності,
-     * відправка в БД порціями по batchSize. Лише додавання: дублікат id призведе до відкату всього пакета.
-     */
     public void insertAllBatch(List<T> entities, int batchSize) {
         try (Connection conn = DBConnection.getInstance().getConnection()) {
             conn.setAutoCommit(false);
@@ -193,7 +164,6 @@ public abstract class AbstractJdbcCrudService<T extends BaseEntity> implements C
         }
     }
 
-    /** Виконує SELECT і перетворює кожен рядок через mapRow. Єдине місце, де читається ResultSet у списки. */
     protected List<T> query(String sql, ParamSetter setter) {
         List<T> result = new ArrayList<>();
         try (Connection conn = DBConnection.getInstance().getConnection();

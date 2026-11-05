@@ -9,10 +9,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Виконує init.sql з classpath під час старту програми.
- * Скрипт ідемпотентний (CREATE ... IF NOT EXISTS), тому повторний запуск безпечний.
- */
 public final class SchemaInitializer {
 
     private SchemaInitializer() {}

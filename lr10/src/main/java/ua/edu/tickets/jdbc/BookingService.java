@@ -7,10 +7,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * Операція, що змінює дві таблиці (passengers і tickets) в ОДНІЙ транзакції:
- * або зберігається і пасажир, і всі його квитки, або нічого.
- */
 public class BookingService {
 
     private final JdbcPassengerService passengers;

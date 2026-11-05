@@ -35,7 +35,6 @@ public class JdbcTicketService extends AbstractJdbcCrudService<Ticket> implement
                 + "status = ?, carriage = ?, platform = ?, upper_berth = ?, passenger_id = ? WHERE id = ?";
     }
 
-    /** Єдине місце перетворення рядка таблиці на об'єкт потрібного підкласу Ticket. */
     @Override
     protected Ticket mapRow(ResultSet rs) throws SQLException {
         int id = (int) rs.getLong("id");

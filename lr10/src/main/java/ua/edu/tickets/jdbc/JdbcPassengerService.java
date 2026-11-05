@@ -35,7 +35,6 @@ public class JdbcPassengerService extends AbstractJdbcCrudService<Passenger> imp
         ps.setLong(3, p.getId());
     }
 
-    /** Безпечний пошук: значення передається параметром, а не склеюється з SQL. */
     @Override
     public List<Passenger> findByName(String name) {
         return query("SELECT * FROM passengers WHERE name = ? ORDER BY id", ps -> ps.setString(1, name));

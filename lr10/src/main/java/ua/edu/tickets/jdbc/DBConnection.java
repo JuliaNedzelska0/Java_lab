@@ -10,12 +10,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-/**
- * Singleton, що тримає пул з'єднань (HikariCP), а не одне спільне Connection.
- * Ліниве створення через holder-клас: JVM гарантує потокобезпечну ініціалізацію.
- * Параметри підключення беруться з application.properties; змінні середовища
- * DB_URL, DB_USER, DB_PASSWORD мають пріоритет (щоб пароль не потрапляв у репозиторій).
- */
 public final class DBConnection {
 
     private final HikariDataSource dataSource;
@@ -43,7 +37,6 @@ public final class DBConnection {
         return dataSource;
     }
 
-    /** Віддає з'єднання з пулу. close() повертає його в пул, а не закриває фізично. */
     public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
