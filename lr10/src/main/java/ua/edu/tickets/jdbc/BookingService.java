@@ -28,7 +28,7 @@ public class BookingService {
                 }
                 conn.commit();
             } catch (SQLException | RuntimeException e) {
-                conn.rollback();   // скасовуємо і пасажира, і вже вставлені квитки
+                conn.rollback();   
                 throw e;
             } finally {
                 conn.setAutoCommit(true);
