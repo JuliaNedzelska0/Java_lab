@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ua.edu.tickets</groupId>
+    <artifactId>tickets-jdbc</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+    <name>tickets-jdbc</name>
+    <description>ЛР №10: Maven і робота з реляційною БД через JDBC (квитки та пасажири)</description>
+
+    <properties>
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <main.class>ua.edu.tickets.Main</main.class>
+    </properties>
+
+    <dependencies>
+        <!-- Пул з'єднань: потрібен коду на етапі компіляції (HikariConfig, HikariDataSource) -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.1.0</version>
+        </dependency>
+
+        <!-- JDBC-драйвер H2: код працює через інтерфейси java.sql.*, тому драйвер потрібен лише під час виконання -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.3.232</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Біндінг для slf4j, який вимагає HikariCP (без нього буде попередження про NOP-логер) -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.16</version>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <mainClass>${main.class}</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
