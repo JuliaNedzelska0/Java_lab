@@ -12,11 +12,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-/**
- * Singleton: EntityManagerFactory коштовний, його створюють один раз на програму.
- * EntityManager легкий і не потокобезпечний, тому створюється на кожну операцію й закривається.
- * З'єднання береться з пулу DBConnection, тож параметри БД лишаються в application.properties.
- */
 public final class JpaUtil {
 
     private final EntityManagerFactory emf;
@@ -35,14 +30,12 @@ public final class JpaUtil {
         return Holder.INSTANCE;
     }
 
-    /** Читання без транзакції. Після повернення EntityManager закрито, а сутності стають detached. */
     public <R> R read(Function<EntityManager, R> work) {
         try (EntityManager em = emf.createEntityManager()) {
             return work.apply(em);
         }
     }
 
-    /** Робота в транзакції: commit при успіху, rollback при будь-якому винятку. */
     public <R> R inTransaction(Function<EntityManager, R> work) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -67,7 +60,6 @@ public final class JpaUtil {
         });
     }
 
-    /** Статистика Hibernate (кількість SQL-запитів тощо). */
     public Statistics statistics() {
         return emf.unwrap(SessionFactory.class).getStatistics();
     }

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-/** Спільна реалізація CRUDService на Hibernate. Усі запити JPQL, значення лише через іменовані параметри. */
 public abstract class HibernateCrudService<T extends BaseEntity> implements CRUDService<T> {
 
     protected final JpaUtil jpa = JpaUtil.getInstance();
@@ -29,7 +28,6 @@ public abstract class HibernateCrudService<T extends BaseEntity> implements CRUD
         return entity;
     }
 
-    /** merge: якщо рядка з таким id немає, вставляє, інакше оновлює. Повертає керовану копію. */
     @Override
     public T save(T entity) {
         Objects.requireNonNull(entity, "Сутність не може бути null");
@@ -48,7 +46,6 @@ public abstract class HibernateCrudService<T extends BaseEntity> implements CRUD
         });
     }
 
-    /** Усі рядки в пам'ять: для великих таблиць небезпечно, використовуйте findPage. */
     @Override
     public List<T> findAll() {
         return select("order by e.id", q -> { });
@@ -59,7 +56,6 @@ public abstract class HibernateCrudService<T extends BaseEntity> implements CRUD
         return select("order by e.name, e.id", q -> { });
     }
 
-    /** Посторінкове читання (page з 0). */
     public List<T> findPage(int page, int size) {
         if (page < 0 || size <= 0) {
             throw new IllegalArgumentException("page >= 0 і size > 0");
@@ -79,7 +75,6 @@ public abstract class HibernateCrudService<T extends BaseEntity> implements CRUD
         return jpa.inTransaction(em -> em.createQuery("delete from " + entityName()).executeUpdate());
     }
 
-    /** Хвіст JPQL-запиту (where/order by) із константного тексту, значення передаються через binder. */
     protected List<T> select(String clauses, Consumer<TypedQuery<T>> binder) {
         return jpa.read(em -> {
             TypedQuery<T> query = em.createQuery("select e from " + entityName() + " e " + clauses, type);
@@ -88,7 +83,6 @@ public abstract class HibernateCrudService<T extends BaseEntity> implements CRUD
         });
     }
 
-    /** Назва сутності в JPQL (за замовчуванням це просте ім'я класу). */
     private String entityName() {
         return type.getSimpleName();
     }

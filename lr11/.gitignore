@@ -1,7 +1,0 @@
-target/
-data/
-out/
-*.class
-.idea/
-*.iml
-.vscode/

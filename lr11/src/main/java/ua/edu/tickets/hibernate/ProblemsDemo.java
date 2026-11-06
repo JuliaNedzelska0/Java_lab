@@ -7,7 +7,6 @@ import ua.edu.tickets.Passenger;
 
 import java.util.List;
 
-/** Відтворення двох типових проблем Hibernate і їх виправлення. */
 public final class ProblemsDemo {
 
     private ProblemsDemo() {}

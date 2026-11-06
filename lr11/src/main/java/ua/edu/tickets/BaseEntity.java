@@ -5,14 +5,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import org.hibernate.Hibernate;
 
-/**
- * Спільні поля сутностей (id, name). @MappedSuperclass: окремої таблиці немає,
- * стовпці потрапляють у таблиці нащадків.
- */
 @MappedSuperclass
 public abstract class BaseEntity {
 
-    /** Ключ задається доменом (номер квитка, номер пасажира), тому @GeneratedValue не використовується. */
     @Id
     @Column(name = "id")
     private long id;
@@ -20,7 +15,6 @@ public abstract class BaseEntity {
     @Column(name = "name", nullable = false, length = 200)
     private String name;
 
-    /** Конструктор без параметрів потрібен Hibernate (може бути protected). */
     protected BaseEntity() {}
 
     protected BaseEntity(long id, String name) {
@@ -35,10 +29,6 @@ public abstract class BaseEntity {
 
     public String getName() { return name; }
 
-    /**
-     * Рівність за id (бізнес-ключ, що задається до збереження й не змінюється), тому hashCode стабільний.
-     * Hibernate.getClass потрібен, бо ліниве посилання може бути проксі-підкласом, і getClass() зламав би порівняння.
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
