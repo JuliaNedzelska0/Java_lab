@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+    <persistence-unit name="ticketsPU" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <class>ua.edu.tickets.BaseEntity</class>
+        <class>ua.edu.tickets.Passenger</class>
+        <class>ua.edu.tickets.Ticket</class>
+        <class>ua.edu.tickets.TrainTicket</class>
+        <class>ua.edu.tickets.SleeperTrainTicket</class>
+        <class>ua.edu.tickets.BusTicket</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+
+        <properties>
+            <!-- URL, користувач і пароль тут не вказуємо: DataSource (HikariCP) передає JpaUtil з application.properties -->
+
+            <!-- Схему створює init.sql, Hibernate лише перевіряє, що сутності відповідають таблицям -->
+            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+
+            <!-- Лічильники для демонстрації N+1 (кількість SQL-запитів) -->
+            <property name="hibernate.generate_statistics" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>

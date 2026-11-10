@@ -27,7 +27,7 @@ public class Main {
 
         System.out.println("\n=== Observer: зміна статусу квитка ===");
         ticket.subscribe(new LoggerObserver());
-        ticket.subscribe(new NotificationObserver());
+        ticket.subscribe(new NotificationObserver(new SmsGatewayAdapter(new ExternalSmsGateway())));
         ticket.setStatus(TicketStatus.PAID);
         ticket.setStatus(TicketStatus.CANCELLED);
 
