@@ -13,16 +13,15 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        SchemaInitializer.init();          // init.sql виконується при кожному старті (ідемпотентно)
+        SchemaInitializer.init();        
 
         JdbcTicketService ticketDao = new JdbcTicketService();
         JdbcPassengerService passengerDao = new JdbcPassengerService();
-        // Демо починається з чистих таблиць (файл БД зберігається між запусками). Спершу квитки: FK.
+
         ticketDao.deleteAll();
         passengerDao.deleteAll();
 
         try {
-            // Далі клієнтський код працює лише з інтерфейсами з ЛР №7: сховище підставлене ззовні.
             TicketService tickets = ticketDao;
             CRUDService<Passenger> passengers = passengerDao;
 
@@ -38,7 +37,6 @@ public class Main {
         }
     }
 
-    // ===== Демо з ЛР №7 без змін логіки: тепер дані лежать у БД =====
     private static void runLab7Demo(TicketService tickets, CRUDService<Passenger> passengers) {
         System.out.println("=== 1. save: додавання ===");
         tickets.save(new SleeperTrainTicket(101, 400, 12, "Чернівці", "Київ", 5, true));
@@ -89,7 +87,6 @@ public class Main {
         }
     }
 
-    // ===== Зовнішній ключ і ON DELETE RESTRICT =====
     private static void runForeignKeyDemo(JdbcTicketService ticketDao, JdbcPassengerService passengerDao) {
         System.out.println("\n=== 8. Зовнішній ключ tickets.passenger_id -> passengers.id (ON DELETE RESTRICT) ===");
         Ticket ticket = new TrainTicket(102, 270, 5, "Львів", "Київ");
@@ -112,7 +109,6 @@ public class Main {
         passengerDao.save(new Passenger(1, "Петренко Олена", 34));
     }
 
-    // ===== Транзакція: commit і rollback =====
     private static void runTransactionDemo(JdbcTicketService ticketDao, JdbcPassengerService passengerDao) {
         System.out.println("\n=== 9. Транзакція: пасажир + квитки (commit / rollback) ===");
         BookingService booking = new BookingService(passengerDao, ticketDao);
@@ -124,7 +120,6 @@ public class Main {
 
         long before = passengerDao.count();
         try {
-            // Другий квиток займає вже продане місце (UNIQUE name+place) -> помилка -> ROLLBACK
             booking.registerPassengerWithTickets(new Passenger(11, "Шевчук Тарас", 41), List.of(
                     new TrainTicket(203, 320, 22, "Київ", "Харків"),
                     new TrainTicket(204, 320, 21, "Київ", "Харків")));
@@ -140,7 +135,6 @@ public class Main {
         }
     }
 
-    // ===== Захист від SQL-ін'єкції =====
     private static void runInjectionDemo(JdbcPassengerService passengerDao) {
         System.out.println("\n=== 10. SQL-ін'єкція проти PreparedStatement ===");
         String attack = "x' OR '1'='1";
@@ -151,11 +145,10 @@ public class Main {
                 + passengerDao.findByName("Петренко Олена").size() + " запис");
     }
 
-    // ===== Пакетна вставка і пагінація =====
     private static void runBatchAndPagingDemo(JdbcTicketService ticketDao, JdbcPassengerService passengerDao) {
         System.out.println("\n=== 11. Пакетна вставка проти вставки по одному ===");
         final int n = 5000;
-        ticketDao.deleteAll();      // пасажири з попередніх кроків більше не потрібні (спершу квитки через FK)
+        ticketDao.deleteAll();    
         passengerDao.deleteAll();
         List<Passenger> batch1 = generate(1, n);
         List<Passenger> batch2 = generate(n + 1, n);
@@ -195,7 +188,6 @@ public class Main {
         return t;
     }
 
-    /** Коротко: тип порушення й назва обмеження (повне повідомлення драйвера містить увесь SQL). */
     private static String rootMessage(Throwable e) {
         Throwable cur = e;
         while (cur.getCause() != null) {
